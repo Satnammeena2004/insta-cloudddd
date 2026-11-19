@@ -1,23 +1,24 @@
-# Build from the repo root:  docker build -f apps/api/Dockerfile .
-# One image runs the API, the background worker, and the DB migration (different CMD).
+# Supports both monorepo builds and standalone builds with apps/api as the context.
 FROM node:24-alpine AS build
 WORKDIR /repo
-COPY package.json package-lock.json ./
-COPY apps/api/package.json apps/api/
-COPY apps/web/package.json apps/web/
-RUN npm ci --workspace @insta/api --include-workspace-root=false
-COPY apps/api apps/api
-RUN npm run build -w @insta/api
+COPY . .
+RUN if [ -f apps/api/package.json ]; then \
+      npm ci --workspace @insta/api --include-workspace-root=false && \
+      npm run build -w @insta/api && cp -a apps/api/dist app-dist; \
+    else \
+      npm install && npm run build && cp -a dist app-dist; \
+    fi
 
 FROM node:24-alpine AS run
 ENV NODE_ENV=production
 WORKDIR /repo
-COPY package.json package-lock.json ./
-COPY apps/api/package.json apps/api/
-COPY apps/web/package.json apps/web/
-RUN npm ci --omit=dev --workspace @insta/api --include-workspace-root=false
-COPY --from=build /repo/apps/api/dist apps/api/dist
-COPY supabase supabase
+COPY . .
+RUN if [ -f apps/api/package.json ]; then \
+      npm ci --omit=dev --workspace @insta/api --include-workspace-root=false; \
+    else \
+      npm install --omit=dev; \
+    fi
+COPY --from=build /repo/app-dist app-dist
 USER node
 EXPOSE 4000
-CMD ["node", "apps/api/dist/index.js"]
+CMD ["node", "app-dist/index.js"]
