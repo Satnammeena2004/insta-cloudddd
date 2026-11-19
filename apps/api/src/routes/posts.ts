@@ -22,6 +22,13 @@ postsRouter.get("/tag/:tag", async (req, res) => {
   res.json({ posts: await postsWhere(req.userId, "p.hashtags @> array[$2]::text[]", [tag], 30) });
 });
 
+// GET /api/v1/posts/explore — recent posts from every other account
+postsRouter.get("/explore", async (req, res) => {
+  res.json({
+    posts: await postsWhere(req.userId, "p.user_id <> $2", [req.userId], 100),
+  });
+});
+
 const createPost = z.object({
   imageUrl: z.url(),
   publicId: z.string().min(1),

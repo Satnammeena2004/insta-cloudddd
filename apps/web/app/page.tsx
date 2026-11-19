@@ -2,7 +2,6 @@
 
 import { useCallback, useEffect, useState } from "react";
 import AppShell from "@/components/AppShell";
-import Composer from "@/components/Composer";
 import PostList from "@/components/PostList";
 import { api } from "@/lib/api";
 import type { Post } from "@/lib/types";
@@ -29,8 +28,7 @@ export default function Home() {
   return (
     <AppShell>
       <section className="feed">
-        <div className="page-heading"><p className="eyebrow">Your people, your moments</p><h1>Fresh from your circle.</h1></div>
-        <Composer onCreated={() => load()} />
+        <div className="page-heading"><div><p className="eyebrow">Your feed</p><h1>Moments from your circle</h1></div><span className="feed-status">Following</span></div>
         {error && <p className="error">{error}</p>}
         <PostList posts={posts} empty="Your feed is empty. Post a photo or find people to follow." />
         {cursor && <button className="ghost wide" onClick={() => load(cursor)}>Load more</button>}

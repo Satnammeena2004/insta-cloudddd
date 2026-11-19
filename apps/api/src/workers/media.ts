@@ -23,7 +23,6 @@ async function transformImage(publicId: string) {
 
 /** Step 3 of the guide: fan-out the post id into every follower's cached feed. */
 async function fanOut(job: NewPostJob) {
-  await pushToFeeds([job.userId], job.postId, job.createdAtMs);
   let last = "00000000-0000-0000-0000-000000000000";
   for (;;) {
     const { rows } = await query<{ follower_id: string }>(

@@ -25,12 +25,12 @@ export async function pushToFeeds(userIds: string[], postId: string, scoreMs: nu
 
 export const invalidateFeed = (userId: string) => safe(() => redis.del(feedKey(userId)), 0);
 
-/** Cache miss path: SQL JOIN of own + followed users' posts, then refill the ZSET. */
+/** Cache miss path: posts from every other account, then refill the ZSET. */
 export async function rebuildFeed(userId: string) {
   const { rows } = await query<{ post_id: string; ms: string }>(
     `select p.post_id, (extract(epoch from p.created_at) * 1000)::bigint as ms
        from posts p
-      where p.user_id = $1 or p.user_id in (select following_id from follows where follower_id = $1)
+      where p.user_id <> $1
       order by p.created_at desc limit ${FEED_MAX}`,
     [userId],
   );
@@ -59,6 +59,23 @@ export async function readFeed(userId: string, cursor?: number) {
 
   if (!items.length && cursor === undefined) {
     source = "db";
+    items = (await rebuildFeed(userId)).slice(0, PAGE_SIZE);
+  }
+
+  if (items.length) {
+    const ids = items.map((item) => item.id);
+    const { rows } = await query<{ post_id: string }>(
+      `select post_id from posts where post_id = any($1::uuid[]) and user_id <> $2`,
+      [ids, userId],
+    );
+    const allowed = new Set(rows.map((row) => row.post_id));
+    items = items.filter((item) => allowed.has(item.id));
+  }
+
+  // Recover old caches created before own-post filtering or by stale workers.
+  if (!items.length && cursor === undefined) {
+    source = "db";
+    await invalidateFeed(userId);
     items = (await rebuildFeed(userId)).slice(0, PAGE_SIZE);
   }
 
