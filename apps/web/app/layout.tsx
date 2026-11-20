@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "InstaCloud",
-  description: "Share photos with people you follow.",
+  title: "Momento — Share your moments",
+  description: "A mobile-first community for sharing photos and moments.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

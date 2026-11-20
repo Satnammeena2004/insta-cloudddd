@@ -70,7 +70,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
     <NotificationsProvider>
     <main className="app-shell">
       <aside className="sidebar">
-        <Link href="/" className="brand"><span className="brand-mark"><Sparkles size={16} /></span><span>InstaCloud</span></Link>
+        <Link href="/" className="brand"><span className="brand-mark"><Sparkles size={16} /></span><span>Momento</span></Link>
         <nav className="main-nav" aria-label="Main navigation">
           {navItems.map(({ href, label, icon: Icon }) => (
             <Link key={label} href={href} className={pathname === href ? "active" : ""}>
@@ -82,7 +82,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
       </aside>
       <div className="app-content">
         <header className="topbar">
-          <Link href="/" className="mobile-brand brand"><span className="brand-mark"><Sparkles size={15} /></span>InstaCloud</Link>
+          <Link href="/" className="mobile-brand brand"><span className="brand-mark"><Sparkles size={15} /></span>Momento</Link>
           <form className="top-search" onSubmit={(e) => { e.preventDefault(); if (searchResults[0]) router.push(`/u/${searchResults[0].username}`); }}>
             <div className="search-field">
               <Search size={16} />

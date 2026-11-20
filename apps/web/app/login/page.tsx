@@ -53,7 +53,7 @@ export default function LoginPage() {
     <main className="auth-page">
       <section className="auth-card">
         <aside className="auth-story">
-          <div className="auth-brand"><span><Sparkles size={18} /></span>InstaCloud</div>
+          <div className="auth-brand"><span><Sparkles size={18} /></span>Momento</div>
           <div className="auth-story-copy">
             <p>Share your world</p>
             <h1>Moments feel closer here.</h1>
@@ -63,9 +63,9 @@ export default function LoginPage() {
         </aside>
 
         <div className="auth-panel">
-          <div className="auth-mobile-brand"><span><Sparkles size={16} /></span>InstaCloud</div>
+          <div className="auth-mobile-brand"><span><Sparkles size={16} /></span>Momento</div>
           <div className="auth-heading">
-            <p>{mode === "login" ? "Welcome back" : "Join InstaCloud"}</p>
+            <p>{mode === "login" ? "Welcome back" : "Join Momento"}</p>
             <h2>{mode === "login" ? "Log in to continue" : "Create your account"}</h2>
           </div>
 
@@ -113,7 +113,7 @@ export default function LoginPage() {
           </form>
 
           <p className="auth-switch">
-            {mode === "login" ? "New to InstaCloud?" : "Already have an account?"}
+            {mode === "login" ? "New to Momento?" : "Already have an account?"}
             <button type="button" onClick={() => switchMode(mode === "login" ? "register" : "login")}>
               {mode === "login" ? "Create account" : "Log in"}
             </button>

@@ -1,6 +1,6 @@
 // Minimal token store. Tokens come from the API's /auth endpoints (Supabase Auth underneath).
 // Note: localStorage is fine for a prototype; move the refresh token to an HttpOnly cookie for production.
-const KEY = "instacloud.session";
+const KEY = "momento.session";
 export const API_URL = process.env.NEXT_PUBLIC_API_URL!;
 
 export type Session = { accessToken: string; refreshToken: string; expiresAt: number };
